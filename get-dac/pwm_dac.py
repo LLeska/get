@@ -1,4 +1,5 @@
 import RPi.GPIO as GPIO
+import time 
 
 class PWM_DAC:
     def __init__(self, gpio_pin, pwm_frequency, dynamic_range, verbose = False):
@@ -7,35 +8,16 @@ class PWM_DAC:
         self.dynamic_range = dynamic_range 
         self.verbose = verbose
         GPIO.setmode(GPIO.BCM)
-        GPIO.setup(self.gpio_bits, GPIO.OUT, initial = 0)
+        GPIO.setup(self.gpio_pin, GPIO.OUT, initial = 0)
 
-
-    def deinit(self):
-        ...
-
-    def set_voltage(self, voltage):
-        ...
-
-
-class R2R_DAC:
-    def __init__(self, gpio_bits, dynamic_range, verbose = False):
-        self.gpio_bits = gpio_bits
-        self.dynamic_range = dynamic_range
-        self.verbose = verbose
+        self.pwm = GPIO.PWM(self.gpio_pin, self.pwm_frequency)
+        self.pwm.start(0)
         
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(self.gpio_bits, GPIO.OUT, initial = 0)
+
 
     def deinit(self):
-        GPIO.output(self.gpio_bits, 0)
+        GPIO.output(self.gpio_pin, 0)
         GPIO.cleanup()
-
-
-    def set_number(self, num):
-        bin_numb = bin(num)[2:].zfill(8)
-
-        for i in range(1, 9):
-            GPIO.output(self.gpio_bits[-i], int(bin_numb[i-1]))
 
 
     def set_voltage(self, voltage):
@@ -44,21 +26,21 @@ class R2R_DAC:
             print("Устанавлниваем 0.0 В")
             return 0
 
-        self.set_number(int(voltage / self.dynamic_range * 255))
+        self.pwm.ChangeDutyCycle((voltage / self.dynamic_range)*100)
 
 
 
 if __name__ == "__main__":
     try:
-        dac = R2R_DAC([16, 20, 21, 25, 26, 17, 27, 22], 3.183, True)
+        dac = PWM_DAC(12, 1000, 3.285, True)
         
         while True:
             try:
                 voltage = float(input("Введите напряжение в Вольтах: "))
                 dac.set_voltage(voltage)
-
             except ValueError:
                 print("Вы ввели не число. Попробуйте ещё раз\n")
+            
 
     finally:
         dac.deinit()
