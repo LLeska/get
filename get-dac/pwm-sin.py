@@ -4,9 +4,9 @@ import time
 
 
 signal_frequency = 10
-sampling_frequency = 1000
+sampling_frequency = 100
 pwm_pin = 12
-dynamic_range = 3.285
+dynamic_range = 3
 
 
 

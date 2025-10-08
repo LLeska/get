@@ -4,9 +4,9 @@ import time
 
 
 signal_frequency = 10
-sampling_frequency = 1000
+sampling_frequency = 100
 r2r_pins = [16, 20, 21, 25, 26, 17, 27, 22]
-dynamic_range = 3.183
+dynamic_range = 3
 
 
 if __name__ == "__main__":

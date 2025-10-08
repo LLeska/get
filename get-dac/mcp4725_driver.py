@@ -1,4 +1,3 @@
-import RPi.GPIO as GPIO
 import smbus
 
 
@@ -41,7 +40,7 @@ class MCP4725:
 
 if __name__ == "__main__":
     try:
-        mcp = MCP4725(5)
+        mcp = MCP4725(5.17)
         
         while True:
             try:
