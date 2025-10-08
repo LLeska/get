@@ -2,7 +2,7 @@ import RPi.GPIO as GPIO
 
 
 class R2R_DAC:
-    def __init__(self, gpio_bits: list[int], dynamic_range: float, verbose: bool = False):
+    def __init__(self, gpio_bits, dynamic_range: float, verbose: bool = False):
         self.__gpio_bits = gpio_bits
         self.__dynamic_range = dynamic_range
         self.__verbose = verbose
@@ -16,10 +16,9 @@ class R2R_DAC:
 
 
     def set_number(self, num: int) -> None:
-        bin_numb = bin(num)[2:].zfill(8)
+        bin_numb = [int(el) for el in bin(num)[2:].zfill(8)]
 
-        for i in range(1, 9):
-            GPIO.output(self.__gpio_bits[-i], int(bin_numb[i-1]))
+        GPIO.output(self.__gpio_bits, bin_numb)
 
 
     def set_voltage(self, voltage: float) -> None:
@@ -29,7 +28,7 @@ class R2R_DAC:
             self.set_number(0)
             return 
 
-        self.set_number(int(voltage / self.__dynamic_range * 255))
+        self.set_number(int((voltage / self.__dynamic_range )* 255))
 
 
 
