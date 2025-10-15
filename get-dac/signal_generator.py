@@ -9,5 +9,5 @@ def get_tri_wave_amplitude(freq:int, time: float) -> float:
     return ((- 2.0 / pi) * asin(sin(2*pi*freq*time)) + 1) / 2
 
 
-def wait_for_sampling_period(sampling_frequency: int) -> None: #wait 1 sampling period
-    sleep(1/sampling_frequency)
+def wait_for_sampling_period(sampling_frequency: int, dt: float = 0.0) -> None: #wait 1 sampling period
+    sleep(1.0/sampling_frequency - dt)
