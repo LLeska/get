@@ -10,7 +10,7 @@ class R2R_DAC:
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.__gpio_bits, GPIO.OUT, initial = 0)
 
-    def deinit(self):
+    def deinit(self) -> None:
         GPIO.output(self.__gpio_bits, 0)
         GPIO.cleanup()
 
@@ -29,9 +29,10 @@ class R2R_DAC:
             return 
 
         self.set_number(int((voltage / self.__dynamic_range )* 255))
-    
+
     def get_dynamic_range(self) -> float:
         return self.__dynamic_range
+
 
 
 
