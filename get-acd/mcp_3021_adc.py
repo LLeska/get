@@ -7,7 +7,7 @@ class MCP3021:
     def __init__(self, dynamic_range: float, comp_time: float = 0.05, address: bool=0x4d):
         self.__bus = smbus.SMBus(1) 
         self.__address = address
-    
+        sleep(1)
 
         self.__comp_time = comp_time
         self.__dynamic_range = dynamic_range

@@ -22,6 +22,5 @@ if __name__ == "__main__":
             times = [0]
             mess = [0]
         adc_plot.plot_voltage_vs_time(times, mess)
-        adc_plot.plot_sampling_period_hist(times)
     finally:
         acd.deinit()
