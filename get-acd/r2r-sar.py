@@ -9,20 +9,24 @@ if __name__ == "__main__":
     gpio_bits = gpio_bits[::-1]
     comp_pin = 21
 
-    acd = r2r_adc.R2R_ADC(gpio_bits, dynamic_range, comp_pin, True)
+    acd = r2r_adc.R2R_ADC(gpio_bits, dynamic_range, comp_pin, 0.0005, True)
+
     times = []
     mess = []
-
-    experement_time = 100
+    experement_time = 5
 
     try:
         t0 = time()
-        while(t0-time() > experement_time):
+
+        while(time() - t0 < experement_time):
             mes = acd.get_sar_voltage()
             t1 = time()
             times.append(t1-t0)
             mess.append(mes)
-        adc_plot.plot_voltage_vs_time(time, mess)
-        adc_plot.plot_sampling_period_hist(time)
+        if len(times) == 0:
+            times = [0]
+            mess = [0]
+        adc_plot.plot_voltage_vs_time(times, mess)
+        adc_plot.plot_sampling_period_hist(times)
     finally:
         acd.deinit()

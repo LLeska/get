@@ -1,4 +1,5 @@
 import smbus
+from time import sleep
 
 dynamic_range = 5
 
@@ -21,7 +22,6 @@ class MCP3021:
            
 
 if __name__ == "__main__":
-    from time import sleep
     try:
         acd = MCP3021(dynamic_range)
         while True:

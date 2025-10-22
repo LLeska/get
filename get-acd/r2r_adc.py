@@ -4,7 +4,7 @@ from time import sleep
 
 
 class R2R_ADC:
-    def __init__(self, gpio_bits, dynamic_range: float,comp_pin: int, comp_time: float = 0.01, verbose: bool = False):
+    def __init__(self, gpio_bits, dynamic_range: float,comp_pin: int, comp_time: float = 0.005, verbose: bool = False):
         self.__dac = r2r_dac.R2R_DAC(gpio_bits, dynamic_range, True)
         self.__comp_pin = comp_pin
         self.__comp_time = comp_time
@@ -15,6 +15,7 @@ class R2R_ADC:
         self.__dac.deinit()
 
     def get_sar_voltage(self) -> float:
+        self.__dac.set_number(0)
         l = 0
         r = 255
         while( r-l > 1):
@@ -27,13 +28,14 @@ class R2R_ADC:
         return ((r+l)/510)*self.__dac.get_dynamic_range()
 
     def get_sc_voltage(self) -> float:
+        self.__dac.set_number(0)
+        sleep(self.__comp_time)
         n = -1
-        while(GPIO.input(self.__comp_pin) or n < 256):
+        while(not GPIO.input(self.__comp_pin) and n < 255):
             n += 1
             self.__dac.set_number(n)
             sleep(self.__comp_time)
-        if n != 256: return (n/255) * self.__dac.get_dynamic_range()
-        return self.__dac.get_dynamic_range()
+        return (n/255) * self.__dac.get_dynamic_range()
 
 
 if __name__ == "__main__":
@@ -44,6 +46,6 @@ if __name__ == "__main__":
     adc = R2R_ADC(gpio_bits, dynamic_range,comp_pin, True)
     try:
         while True:
-            print(adc.get_sar_voltage())
+            print(adc.get_sc_voltage())
     finally:
         adc.deinit()
